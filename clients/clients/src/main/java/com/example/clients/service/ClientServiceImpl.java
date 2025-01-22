@@ -1,7 +1,7 @@
 package com.example.clients.service;
 
 import com.example.clients.dto.ClientResponse;
-import dto.ClientRequest;
+import com.example.clients.dto.ClientRequest;
 import com.example.clients.entity.Client;
 import com.example.clients.repository.ClientRepository;
 import org.springframework.stereotype.Service;
