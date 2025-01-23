@@ -3,6 +3,9 @@ package com.example.clients.service;
 import com.example.clients.dto.ClientResponse;
 import com.example.clients.dto.ClientRequest;
 import com.example.clients.entity.Client;
+import com.example.clients.exceptions.Exceptions;
+import com.example.clients.exceptions.NotFoundException;
+import com.example.clients.rabbitmq.RabbitMQProducer;
 import com.example.clients.repository.ClientRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +24,10 @@ import static org.mockito.Mockito.*;
 class ClientServiceImplTest {
     @Mock
     private ClientRepository clientRepository;
+
+    @Mock
+    private RabbitMQProducer rabbitMQProducer;
+
 
     @InjectMocks
     private ClientServiceImpl clientService;
@@ -47,6 +54,17 @@ class ClientServiceImplTest {
 
         // Assert
         verify(clientRepository, times(1)).save(any(Client.class));
+        verify(rabbitMQProducer, times(1)).sendMessage("Se agrego un nuevo cliente: Federico Garcia");
+    }
+
+    @Test
+    void testSaveClientException() {
+        // Arrange
+        ClientRequest clientRequest = new ClientRequest("Federico", "Garcia", 30, LocalDate.of(1993, 1, 1));
+        when(clientRepository.save(any(Client.class))).thenThrow(new RuntimeException("Error"));
+
+        // Act and Assert
+        assertThrows(Exceptions.class, () -> clientService.saveClient(clientRequest));
     }
 
     @Test
@@ -74,6 +92,15 @@ class ClientServiceImplTest {
         assertEquals(2, clientResponses.size(), "El tamaño de la lista no coincide.");
         assertEquals("Federico", clientResponses.get(0).getName(), "El nombre del primer cliente no coincide.");
         assertEquals("Maria", clientResponses.get(1).getName(), "El nombre del segundo cliente no coincide.");
+    }
+
+    @Test
+    void testViewClientsWhenEmpty() {
+        // Arrange
+        when(clientRepository.findAll()).thenReturn(Arrays.asList());
+
+        // Act and Assert
+        assertThrows(NotFoundException.class, () -> clientService.viewClients());
     }
 
     @Test

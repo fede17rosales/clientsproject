@@ -26,6 +26,8 @@ el registro, consulta y análisis de datos de clientes. El objetivo es que este 
    `jakarta.persistence-api`
    `mockito`
    `springdoc-openapi-starter-webmvc-ui`
+   `spring-boot-starter-amqp`
+
 2. **Entidad modelo**
    Definimos el modelo para representar un registro de cliente. Lo podemos encontrar en el paquete `entity`
 3. **API Request y Response **

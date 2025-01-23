@@ -5,6 +5,7 @@ import com.example.clients.dto.ClientRequest;
 import com.example.clients.entity.Client;
 import com.example.clients.exceptions.Exceptions;
 import com.example.clients.exceptions.NotFoundException;
+import com.example.clients.rabbitmq.RabbitMQProducer;
 import com.example.clients.repository.ClientRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +23,11 @@ public class ClientServiceImpl implements ClientService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientServiceImpl.class);
 
     private ClientRepository clientRepository;
+    private RabbitMQProducer rabbitMQProducer;
 
-    public ClientServiceImpl(ClientRepository clientRepository) {
+    public ClientServiceImpl(ClientRepository clientRepository, RabbitMQProducer rabbitMQProducer) {
         this.clientRepository = clientRepository;
+        this.rabbitMQProducer = rabbitMQProducer;
     }
 
     @Override
@@ -32,10 +35,11 @@ public class ClientServiceImpl implements ClientService {
         Client client = newClient(clientRequest);
         try{
             clientRepository.save(client);
+            rabbitMQProducer.sendMessage("Se agrego un nuevo cliente: " + clientRequest.getName() + " " + clientRequest.getLastName());
             LOGGER.info("El cliente: " + clientRequest.getName() + " " + clientRequest.getLastName() + " se ha almacenado correctamente");
         } catch (Exception e) {
-            LOGGER.error("Error: el cliente: " + clientRequest.getName() + " " + clientRequest.getLastName() + " no puedo almacenarse");
-            throw new Exceptions("Error: el cliente: " + clientRequest.getName() + " " + clientRequest.getLastName() + " no puedo almacenarse");
+            LOGGER.error("Error: el cliente: " + clientRequest.getName() + " " + clientRequest.getLastName() + " no puede almacenarse");
+            throw new Exceptions("Error: el cliente: " + clientRequest.getName() + " " + clientRequest.getLastName() + " no puede almacenarse");
         }
     }
 
