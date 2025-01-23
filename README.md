@@ -48,7 +48,24 @@ Cada entidad de cliente esta definido por el siguiente esquema:
 - `date_of_birth`: fecha de nacimiento del cliente
 
 ## Iniciar
-- Independientemente del IDE que utilices, puedes ejecutar `Run` o `Alt + Shift + F10`  para iniciar la aplicación.
+
+
+
+- Independientemente del IDE que utilices, debemos posicionarnos en la carpeta raiz clients\ y ejecutar el siguiente comando:
+
+```
+docker-compose up -d
+```
+Docker va a levantar los contenedores de la RabbitMQ y la aplicacion. En caso de no poder ejecutar el comando anterior, se puede realizar los siguientes pasos:
+Debemos posicionarnos en la carpeta clients\clients y ejecutar el siguiente comando para iniciar la imagen de RabbitMQ:
+``` 
+docker run -d --network app-network --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.9-management
+```
+- Por ultimo ejecutar nuestra app con:
+``` 
+docker run -d --network app-network --name clients-container -p 8080:8080 clients-app
+```
+
 - Accede a la aplicación en http://localhost:8080/listclientes desde `postman` o directamente ingresar a la url de Swagger: http://localhost:8080/swagger-ui/index.html#/
 - Y ya puedes probar los siguientes endpoints:
 
