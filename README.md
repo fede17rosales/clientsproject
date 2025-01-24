@@ -4,42 +4,44 @@
 - [Introduccion](#introduccion)
 - [Nuevas Funcionalidades](#nuevas-funcionalidades)
 - [Iniciar](#iniciar)
+- [Documentacion](#documentacion)
 - [Contacto](#contacto)
 
 ## Introduccion
-Una empresa está desarrollando un sistema de gestión de clientes para ofrecer una mejor experiencia a sus usuarios. Se requiere un microservicio que permita manejar
+Una empresa está desarrollando un sistema de gestión de clientes para ofrecer una mejor experiencia a sus usuarios. Se requiere un microservicio que permita manejar  
 el registro, consulta y análisis de datos de clientes. El objetivo es que este servicio sea escalable, seguro y cumpla con las mejores prácticas de desarrollo de software.
+
 ## Nuevas Funcionalidades
 
-- Crear nuevos clientes mediante un endpoint que permita registrar nombre,  apellido, edad y fecha de nacimiento. 
-- Consultar un conjunto de métricas sobre los clientes existentes, como el promedio de edad y la desviación estándar de las edades.
-- Listar todos los clientes registrados con sus datos completos y un cálculo derivado, como una fecha estimada para un evento futuro basado en los datos del cliente (por ejemplo, esperanza de vida).
+Crear nuevos clientes mediante un endpoint que permita registrar nombre,  apellido, edad y fecha de nacimiento.
+Consultar un conjunto de métricas sobre los clientes existentes, como el promedio de edad y la desviación estándar de las edades.
+Listar todos los clientes registrados con sus datos completos y un cálculo derivado, como una fecha estimada para un evento futuro basado en los datos del cliente (por ejemplo, esperanza de vida).
 
-1. **Dependencies**
-   Dentro del archivo `pom.xml` se agregaron las siguientes dependencias:
-   `spring-boot-starter-web`
-   `spring-boot-starter-json`
-   `spring-boot-starter-data-jpa`
-   `h2`
-   `spring-boot-devtools`
-   `lombok`
-   `jakarta.persistence-api`
-   `mockito`
-   `springdoc-openapi-starter-webmvc-ui`
-   `spring-boot-starter-amqp`
+- **Dependencies**  
+  Dentro del archivo `pom.xml` se agregaron las siguientes dependencias:
+   - `spring-boot-starter-web`
+   -  `spring-boot-starter-json`
+   - `spring-boot-starter-data-jpa`
+   - `h2`
+   - `spring-boot-devtools`
+   - `lombok`
+   - `jakarta.persistence-api`
+   - `mockito`
+   - `springdoc-openapi-starter-webmvc-ui`
 
-2. **Entidad modelo**
-   Definimos el modelo para representar un registro de cliente. Lo podemos encontrar en el paquete `entity`
-3. **API Request y Response **
-   Representa la solicitud y respuesta de la API. La podemos encontrar en el paquete `dto`
-4. **Client Service**
-   Capa de servicio donde añadiremos los casos de uso necesarios para llevar a cabo toda la lógica de negocio. La podemos encontrar en el paquete `service`
-5. **Client Controller**
-   En esta capa de control, solo podemos actuar como punto de interacción con el mundo externo (como usuarios, sistemas externos o interfaces gráficas) y ser el núcleo de la aplicación. 
-6. **Application Configuration**
-   Tenemos toda nuestras variables de configuracion en `application.properties`
-7. **Main Application**
-   Donde iniciamos nuestra aplicación Spring Boot.
+
+- **Entidad modelo**  
+  Definimos el modelo para representar un registro de cliente. Lo podemos encontrar en el paquete `entity`
+- **API Request y Response**  
+  Representa la solicitud y respuesta de la API. La podemos encontrar en el paquete `dto`
+- **Client Service**  
+  Capa de servicio donde añadiremos los casos de uso necesarios para llevar a cabo toda la lógica de negocio. La podemos encontrar en el paquete `service`
+- **Client Controller**  
+  En esta capa de control, solo podemos actuar como punto de interacción con el mundo externo (como usuarios, sistemas externos o interfaces gráficas) y ser el núcleo de la aplicación.
+- **Application Configuration**  
+  Archivo `application.properties` donde tenemos todas nuestras configuraciones de ambiente
+- **Main Application**  
+  Clase principal donde iniciamos nuestra aplicación Spring Boot.
 
 Cada entidad de cliente esta definido por el siguiente esquema:
 - `id`: identificador para cada cliente
@@ -49,50 +51,57 @@ Cada entidad de cliente esta definido por el siguiente esquema:
 
 ## Iniciar
 
+### Local
+Independientemente del IDE que utilices, debemos posicionarnos en la carpeta raiz clients\ y ejecutar el siguiente comando:
 
+```  
+docker-compose up -d  
+```  
+Para detener la ejecucion:
 
-- Independientemente del IDE que utilices, debemos posicionarnos en la carpeta raiz clients\ y ejecutar el siguiente comando:
+```  
+docker-compose stop  
+```  
 
-```
-docker-compose up -d
-```
-Docker va a levantar los contenedores de la RabbitMQ y la aplicacion. En caso de no poder ejecutar el comando anterior, se puede realizar los siguientes pasos:
-Debemos posicionarnos en la carpeta clients\clients y ejecutar el siguiente comando para iniciar la imagen de RabbitMQ:
-``` 
-docker run -d --network app-network --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.9-management
-```
-- Por ultimo ejecutar nuestra app con:
-``` 
-docker run -d --network app-network --name clients-container -p 8080:8080 clients-app
-```
+### IMPORTANTE
+Para poder probar nuestros enpoints en postman, ya sea desde **local** o con endpoints de **aws** es necesario ingresar con el tipo de autenticacion basica con los siguientes datos:
 
-- Accede a la aplicación en http://localhost:8080/listclientes desde `postman` o directamente ingresar a la url de Swagger: http://localhost:8080/swagger-ui/index.html#/
-- Y ya puedes probar los siguientes endpoints:
+|  Username|Password  |
+|--|--|
+|  admin| admin |
+
+Caso que no lo hagamos vamos a tener estos errores cuando ejecutemos nuestros endpoints:
+
+![listclientfail.png](clients%2Fclients%2Fsrc%2Fmain%2Fresources%2Fimg%2Flistclientfail.png)
+
+Por favor ingresar con las siguientes configuraciones de esta forma:
+
+![listclientok.png](clients%2Fclients%2Fsrc%2Fmain%2Fresources%2Fimg%2Flistclientok.png)
+
+- Accede a la aplicación en http://localhost:8080/listclientes desde `postman` y probar los siguientes endpoints:
 
 ### Crear Cliente
 
 #### POST
 ##### Request
 
-```  
-curl --location 'localhost:8080/creacliente'
-```  
-
+``` 
+curl --location 'localhost:8080/creacliente'  
+```   
 ##### Responses
 
-```  
-200 Ok
-```  
-
+``` 
+200 Ok  
+```   
 ### Listar Clientes
 ##### Request
 
-```  
-curl --location 'localhost:8080/listclientes'
-```  
+``` 
+curl --location 'localhost:8080/listclientes'  
+``` 
 #### GET
 ##### Responses
-```json  
+```json 
 [
   {
     "nombre": "Federico",
@@ -116,32 +125,42 @@ curl --location 'localhost:8080/listclientes'
     "esperanza_de_vida": "2063-07-20"
   }
 ]
-```  
-
+```   
 ### Obtener KPIS de Clientes
 
 #### GET
 
 ##### Request
+``` 
+curl --location 'localhost:8080/kpideclientes'  
 ```  
-curl --location 'localhost:8080/kpideclientes'
-```
 ##### Responses
 
-```json  
-{
+```json 
+{    
+"edad_promedio":  28.75,  
+  
+"edad_desviacion":  7.39509972887452  
+}  
+```   
+### AWS
+En este apartado se pasan los endpoints donde esta alojada la api en la nube de AWS:
+- GET clients: 54.91.58.16/listclientes
+- GET clientskpi: 54.91.58.16/kpideclientes
+- POST creaclients: 54.91.58.16/creacliente
 
-"edad_promedio":  28.75,
+Una pequeña muestra de como esta corriendo en la instancia EC2 de aws:
 
-"edad_desviacion":  7.39509972887452
+![awsok.png](clients%2Fclients%2Fsrc%2Fmain%2Fresources%2Fimg%2Fawsok.png)
 
-}
-```  
+## Documentación
 
+Ejecutar la app desde local con docker e ingresar a la url de Swagger:
+http://localhost:8080/swagger-ui/index.html#/
 
 ## Contacto
 
 Para mas información, por favor contactar a:
 
 - fede17rosales@gmail.com
-- [Linkedin](https://www.linkedin.com/in/federico-nicolas-rosales-cabrera-0b6092111/)
+- [Perfil de Linkedin](https://www.linkedin.com/in/federico-nicolas-rosales-cabrera-0b6092111/)

@@ -1,14 +1,13 @@
 package com.example.clients.service;
 
-import com.example.clients.dto.ClientResponse;
 import com.example.clients.dto.ClientRequest;
+import com.example.clients.dto.ClientResponse;
 import com.example.clients.entity.Client;
 import com.example.clients.exceptions.Exceptions;
 import com.example.clients.exceptions.NotFoundException;
 import com.example.clients.repository.ClientRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,7 +23,6 @@ public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository clientRepository;
 
-    @Autowired
     public ClientServiceImpl(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
     }
