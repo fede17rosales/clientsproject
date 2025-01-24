@@ -1,13 +1,4 @@
 services:
-  rabbitmq:
-    image: rabbitmq:4.0-management
-    container_name: rabbitmq
-    networks:
-      - app-client-network
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-
   clients-app:
     image: clients-app
     container_name: clients-container

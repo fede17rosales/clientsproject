@@ -5,13 +5,17 @@ import com.example.clients.dto.ClientRequest;
 import com.example.clients.entity.Client;
 import com.example.clients.exceptions.Exceptions;
 import com.example.clients.exceptions.NotFoundException;
-import com.example.clients.rabbitmq.RabbitMQProducer;
 import com.example.clients.repository.ClientRepository;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.DeliverCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,20 +28,17 @@ public class ClientServiceImpl implements ClientService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientServiceImpl.class);
 
     private final ClientRepository clientRepository;
-    private final RabbitMQProducer rabbitMQProducer;
 
     @Autowired
-    public ClientServiceImpl(ClientRepository clientRepository, RabbitMQProducer rabbitMQProducer) {
+    public ClientServiceImpl(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
-        this.rabbitMQProducer = rabbitMQProducer;
     }
 
     @Override
-    public void saveClient(ClientRequest clientRequest) {
+    public void saveClient(ClientRequest clientRequest) throws Exception {
         Client client = convertToClient(clientRequest);
         try{
             clientRepository.save(client);
-            rabbitMQProducer.sendMessage("Se agrego un nuevo cliente: " + clientRequest.getName() + " " + clientRequest.getLastName());
             LOGGER.info("El cliente: " + clientRequest.getName() + " " + clientRequest.getLastName() + " se ha almacenado correctamente");
         } catch (Exception e) {
             LOGGER.error("Error: el cliente: " + clientRequest.getName() + " " + clientRequest.getLastName() + " no puede almacenarse");
@@ -95,4 +96,6 @@ public class ClientServiceImpl implements ClientService {
         client.setDateOfBirth(clientRequest.getDateOfBirth());
         return client;
     }
+
+
 }

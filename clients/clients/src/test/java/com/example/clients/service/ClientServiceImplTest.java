@@ -5,7 +5,6 @@ import com.example.clients.dto.ClientRequest;
 import com.example.clients.entity.Client;
 import com.example.clients.exceptions.Exceptions;
 import com.example.clients.exceptions.NotFoundException;
-import com.example.clients.rabbitmq.RabbitMQProducer;
 import com.example.clients.repository.ClientRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,9 +24,6 @@ class ClientServiceImplTest {
     @Mock
     private ClientRepository clientRepository;
 
-    @Mock
-    private RabbitMQProducer rabbitMQProducer;
-
 
     @InjectMocks
     private ClientServiceImpl clientService;
@@ -38,7 +34,7 @@ class ClientServiceImplTest {
     }
 
     @Test
-    void testSaveClient() {
+    void testSaveClient() throws Exception {
         // Arrange
         ClientRequest clientRequest = new ClientRequest("Federico", "Garcia", 30, LocalDate.of(1993, 1, 1));
         Client clientEntity = new Client();
@@ -54,7 +50,6 @@ class ClientServiceImplTest {
 
         // Assert
         verify(clientRepository, times(1)).save(any(Client.class));
-        verify(rabbitMQProducer, times(1)).sendMessage("Se agrego un nuevo cliente: Federico Garcia");
     }
 
     @Test

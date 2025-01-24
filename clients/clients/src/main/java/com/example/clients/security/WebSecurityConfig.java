@@ -1,6 +1,7 @@
 package com.example.clients.security;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +17,10 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class WebSecurityConfig {
+    @Value("${spring.security.user.name}")
+    private String user;
+    @Value("${spring.security.user.password}")
+    private String password;
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
 
@@ -36,8 +41,8 @@ public class WebSecurityConfig {
     @Bean
     UserDetailsService userDetailsService() {
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("admin")
-                .password(passwordEncoder().encode("admin"))
+        manager.createUser(User.withUsername(user)
+                .password(passwordEncoder().encode(password))
                 .roles().build());
 
         return manager;

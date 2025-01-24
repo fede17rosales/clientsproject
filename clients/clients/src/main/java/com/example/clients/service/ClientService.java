@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface ClientService {
-    void saveClient(ClientRequest client);
+    void saveClient(ClientRequest client) throws Exception;
     List<ClientResponse> viewClients() throws NotFoundException;
 
     Map<String, Double> viewKpiClient() throws NotFoundException;
