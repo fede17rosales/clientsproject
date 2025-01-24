@@ -3,7 +3,10 @@
 ## Contenido
 - [Introduccion](#introduccion)
 - [Nuevas Funcionalidades](#nuevas-funcionalidades)
+- [Arquitectura](#arquitectura)
+- [Patrones y Principios](#patrones)
 - [Iniciar](#iniciar)
+- [Test](#test)
 - [Documentacion](#documentacion)
 - [Contacto](#contacto)
 
@@ -48,6 +51,25 @@ Cada entidad de cliente esta definido por el siguiente esquema:
 - `name`: nombre del cliente
 - `last_name`: apellido del cliente
 - `date_of_birth`: fecha de nacimiento del cliente
+
+### Arquitectura
+
+La arquitectura de la aplicación sigue el patrón de diseño MVC (Modelo-Vista-Controlador) que se divide en tres capas principales:
+- **Modelo**: Representa la estructura de datos y las reglas de negocio. package respository, entity y service
+- **Vista**: Presenta los datos al usuario y maneja la interacción. package dto
+- **Controlador**: Actúa como intermediario entre el modelo y la vista. package controller
+
+
+![mvc.png](clients%2Fclients%2Fsrc%2Fmain%2Fresources%2Fimg%2Fmvc.png)
+
+### Patrones y Principios
+
+Los patrones y principios que se aplicaron en el desarrollo de la aplicación son:
+- **Dependency Injection (DI)**: Se utilizó la anotación `@Component, @Service y  @Controller` para inyectar dependencias en las clases.
+- **Singleton**: Se utilizó la funcion calculateDateOfDeath() de la entidad modelo.
+- **Open/Closed Principle**: Se utilizó las interfaces para abrir la extensión y cerrar la modificación.
+- **Factory Method**: Se utilizó la anotación `@Bean y @Configuration` en la clase WebSecurityConfig.
+- **Inversion of Control (IoC)**: Se utilizó en el controller y en el service para inyectar dependencias en las clases.
 
 ## Iniciar
 
@@ -152,6 +174,15 @@ En este apartado se pasan los endpoints donde esta alojada la api en la nube de 
 Una pequeña muestra de como esta corriendo en la instancia EC2 de aws:
 
 ![awsok.png](clients%2Fclients%2Fsrc%2Fmain%2Fresources%2Fimg%2Fawsok.png)
+
+## Test
+Los test se alojan en la carpeta `src\test\java`, pero se deben ejecutar desde `\clientsproject\clients\clients` con el siguiente comando:
+
+```
+mvn test
+```
+
+
 
 ## Documentación
 
