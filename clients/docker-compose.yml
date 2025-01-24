@@ -1,10 +1,9 @@
-version: '3'
 services:
   rabbitmq:
-    image: rabbitmq:3.9-management
+    image: rabbitmq:4.0-management
     container_name: rabbitmq
     networks:
-      - app-network
+      - app-client-network
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -13,12 +12,12 @@ services:
     image: clients-app
     container_name: clients-container
     networks:
-      - app-network
+      - app-client-network
     ports:
       - "8080:8080"
     depends_on:
       - rabbitmq
 
 networks:
-  app-network:
+  app-client-network:
     driver: bridge

@@ -8,6 +8,6 @@ public class RabbitMQConsumer {
     @RabbitListener(queues = "queue-name")
     public void receiveMessage(String message)
     {
-        System.out.println("Mensaje Recibido: {" + message + "}");
+        System.out.println("Mensaje Recibido desde el Consumer: {" + message + "}");
     }
 }

@@ -9,6 +9,7 @@ import com.example.clients.rabbitmq.RabbitMQProducer;
 import com.example.clients.repository.ClientRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,9 +23,10 @@ public class ClientServiceImpl implements ClientService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientServiceImpl.class);
 
-    private ClientRepository clientRepository;
-    private RabbitMQProducer rabbitMQProducer;
+    private final ClientRepository clientRepository;
+    private final RabbitMQProducer rabbitMQProducer;
 
+    @Autowired
     public ClientServiceImpl(ClientRepository clientRepository, RabbitMQProducer rabbitMQProducer) {
         this.clientRepository = clientRepository;
         this.rabbitMQProducer = rabbitMQProducer;
@@ -32,7 +34,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public void saveClient(ClientRequest clientRequest) {
-        Client client = newClient(clientRequest);
+        Client client = convertToClient(clientRequest);
         try{
             clientRepository.save(client);
             rabbitMQProducer.sendMessage("Se agrego un nuevo cliente: " + clientRequest.getName() + " " + clientRequest.getLastName());
@@ -85,7 +87,7 @@ public class ClientServiceImpl implements ClientService {
         });
         return clientResponses;
     }
-    private Client newClient(ClientRequest clientRequest) {
+    private Client convertToClient(ClientRequest clientRequest) {
         Client client = new Client();
         client.setName(clientRequest.getName());
         client.setLastName(clientRequest.getLastName());

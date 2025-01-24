@@ -21,6 +21,8 @@ import java.util.Map;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -52,6 +54,8 @@ class ClientControllerTest {
 
         // Act & Assert
         mockMvc.perform(post("/creacliente")
+                        .with(httpBasic("admin", "admin"))
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isOk());
@@ -71,6 +75,7 @@ class ClientControllerTest {
 
         // Act & Assert
         mockMvc.perform(get("/listclientes")
+                        .with(httpBasic("admin", "admin"))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", is(2)))
@@ -93,6 +98,7 @@ class ClientControllerTest {
 
         // Act & Assert
         mockMvc.perform(get("/kpideclientes")
+                        .with(httpBasic("admin", "admin"))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.edad_promedio", is(27.5)))
